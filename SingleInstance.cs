@@ -12,17 +12,23 @@ namespace SingleInstanceCore
 		where TApplication : Application, ISingleInstance
 	{
 		private const string channelNameSufflix = ":SingeInstanceIPCChannel";
-		private static Mutex singleMutex;
-		private static TinyMessageBus messageBus;
+		private static Mutex singleMutex; 
+		private static TinyMessageBus messageBus; //IPC message bus for communication between instances
 
+		/// <summary>
+		/// Intended to be on app startup
+		/// Initializes service if the call is from first instance
+		/// Signals the first instance if it already exists
+		/// </summary>
+		/// <param name="uniqueName">A unique name for IPC channel</param>
+		/// <returns>Whether the call is from application's first instance</returns>
 		public static bool InitializeAsFirstInstance(string uniqueName)
 		{
 			var CommandLineArgs = GetCommandLineArgs(uniqueName);
 			string applicationIdentifier = uniqueName + Environment.UserName;
-
 			string channelName = $"{applicationIdentifier}{channelNameSufflix}";
-
 			singleMutex = new Mutex(true, applicationIdentifier, out var firstInstance);
+
 			if (firstInstance)
 				CreateRemoteService(channelName);
 			else
@@ -39,8 +45,6 @@ namespace SingleInstanceCore
 		private static void CreateRemoteService(string channelName)
 		{
 			messageBus = new TinyMessageBus(channelName);
-			messageBus.MessageReceived += (_, e) =>
-				(Application.Current as TApplication).OnInstanceInvoked(e.Message.Deserialize<string[]>());
 			messageBus.MessageReceived += MessageBus_MessageReceived;
 		}
 
@@ -67,12 +71,9 @@ namespace SingleInstanceCore
 						args = NativeMethods.CommandLineToArgvW(reader.ReadToEnd());
 						File.Delete(cmdLinePath);
 					}
-					catch (IOException)
-					{
-					}
+					catch (IOException) { }
 				}
 			}
-
 			if (args == null)
 				args = Array.Empty<string>();
 
