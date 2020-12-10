@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SingleInstanceCore
+﻿namespace SingleInstanceCore
 {
 	public interface ISingleInstance
 	{

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Authors>soheilkd</Authors>
+    <Company />
+    <PackageProjectUrl>https://github.com/soheilkd/SingleInstanceCore</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/soheilkd/SingleInstanceCore</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <Description>Library that helps to create single instance WPF application on .NET Core</Description>
+    <PackageTags>wpf single instance core dotnet</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TinyIpc" Version="2.1.0" />
+  </ItemGroup>
+
+</Project>

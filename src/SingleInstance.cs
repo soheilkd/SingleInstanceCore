@@ -12,7 +12,7 @@ namespace SingleInstanceCore
 		where TApplication : Application, ISingleInstance
 	{
 		private const string channelNameSufflix = ":SingeInstanceIPCChannel";
-		private static Mutex singleMutex; 
+		private static Mutex singleMutex;
 		private static TinyMessageBus messageBus; //IPC message bus for communication between instances
 
 		/// <summary>
@@ -25,8 +25,8 @@ namespace SingleInstanceCore
 		public static bool InitializeAsFirstInstance(string uniqueName)
 		{
 			var CommandLineArgs = GetCommandLineArgs(uniqueName);
-			string applicationIdentifier = uniqueName + Environment.UserName;
-			string channelName = $"{applicationIdentifier}{channelNameSufflix}";
+			var applicationIdentifier = uniqueName + Environment.UserName;
+			var channelName = $"{applicationIdentifier}{channelNameSufflix}";
 			singleMutex = new Mutex(true, applicationIdentifier, out var firstInstance);
 
 			if (firstInstance)
@@ -37,10 +37,7 @@ namespace SingleInstanceCore
 			return firstInstance;
 		}
 
-		private static void SignalFirstInstance(string channelName, IList<string> commandLineArgs)
-		{
-			new TinyMessageBus(channelName).PublishAsync(commandLineArgs.Serialize());
-		}
+		private static void SignalFirstInstance(string channelName, IList<string> commandLineArgs) => new TinyMessageBus(channelName).PublishAsync(commandLineArgs.Serialize());
 
 		private static void CreateRemoteService(string channelName)
 		{
@@ -57,12 +54,12 @@ namespace SingleInstanceCore
 
 		private static string[] GetCommandLineArgs(string uniqueApplicationName)
 		{
-			string[] args = Environment.GetCommandLineArgs();
+			var args = Environment.GetCommandLineArgs();
 			if (args == null)
 			{
 				// Try getting commandline arguments from shared location in case of ClickOnce deployed application  
-				string appFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), uniqueApplicationName);
-				string cmdLinePath = Path.Combine(appFolderPath, "cmdline.txt");
+				var appFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), uniqueApplicationName);
+				var cmdLinePath = Path.Combine(appFolderPath, "cmdline.txt");
 				if (File.Exists(cmdLinePath))
 				{
 					try
@@ -74,10 +71,7 @@ namespace SingleInstanceCore
 					catch (IOException) { }
 				}
 			}
-			if (args == null)
-				args = Array.Empty<string>();
-
-			return args;
+			return args ?? Array.Empty<string>();
 		}
 
 		public static void Cleanup()
