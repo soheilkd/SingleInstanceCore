@@ -18,7 +18,7 @@ Cleanup method should be called on the exit point of the application.
 
 	private void Application_Startup(object sender, StartupEventArgs e)
 	{
-		bool isFirstInstance = SingleInstance<App>.InitializeAsFirstInstance("soheilkd_EPlayerIPC"))
+		bool isFirstInstance = SingleInstance<App>.InitializeAsFirstInstance("soheilkd_ExampleIPC");
 		if (!isFirstInstance)
 		{
 			//If it's not the first instance, arguments are automatically passed to the first instance
