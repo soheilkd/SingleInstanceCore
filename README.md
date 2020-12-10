@@ -1,5 +1,6 @@
 # SingleInstanceCore
 Single instance application - For WPF on .NET Core
+
 NuGet Package: https://www.nuget.org/packages/SingleInstanceCore/
 # Usage
 The App class (on App.xaml.cs) should inherit ISingleInstance and implement OnInstanceInvoked method:
