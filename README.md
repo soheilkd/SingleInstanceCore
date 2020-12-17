@@ -15,6 +15,7 @@ public partial class App : Application, ISingleInstance
 }
 ```
 The initialization of the instance should be done on application startup or main window's startup
+
 Cleanup method should be called on the exit point of the application. 
 ```csharp
 
