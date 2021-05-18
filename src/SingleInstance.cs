@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Windows;
 using TinyIpc.Messaging;
 
 namespace SingleInstanceCore
 {
-	public static class SingleInstance<TApplication>
-		where TApplication : Application, ISingleInstance
+	public static class SingleInstance
 	{
 		private const string channelNameSufflix = ":SingeInstanceIPCChannel";
+		//For detecting if mutex is locked (first instance is already up then)
 		private static Mutex singleMutex;
-		private static TinyMessageBus messageBus; //IPC message bus for communication between instances
+		//Message bus for communication between instances
+		private static TinyMessageBus messageBus; 
 
 		/// <summary>
 		/// Intended to be on app startup
@@ -22,7 +22,7 @@ namespace SingleInstanceCore
 		/// </summary>
 		/// <param name="uniqueName">A unique name for IPC channel</param>
 		/// <returns>Whether the call is from application's first instance</returns>
-		public static bool InitializeAsFirstInstance(string uniqueName)
+		public static bool InitializeAsFirstInstance<T>(this T instance, string uniqueName) where T:ISingleInstance
 		{
 			var CommandLineArgs = GetCommandLineArgs(uniqueName);
 			var applicationIdentifier = uniqueName + Environment.UserName;
@@ -30,26 +30,27 @@ namespace SingleInstanceCore
 			singleMutex = new Mutex(true, applicationIdentifier, out var firstInstance);
 
 			if (firstInstance)
-				CreateRemoteService(channelName);
+				CreateRemoteService(instance, channelName);
 			else
 				SignalFirstInstance(channelName, CommandLineArgs);
 
 			return firstInstance;
 		}
 
-		private static void SignalFirstInstance(string channelName, IList<string> commandLineArgs) => new TinyMessageBus(channelName).PublishAsync(commandLineArgs.Serialize());
-
-		private static void CreateRemoteService(string channelName)
+		private static void SignalFirstInstance(string channelName, IList<string> commandLineArgs)
 		{
-			messageBus = new TinyMessageBus(channelName);
-			messageBus.MessageReceived += MessageBus_MessageReceived;
+			var bus = new TinyMessageBus(channelName);
+			var serializedArgs = commandLineArgs.Serialize();
+			bus.PublishAsync(serializedArgs);
 		}
 
-		private static void MessageBus_MessageReceived(object sender, TinyMessageReceivedEventArgs e)
+		private static void CreateRemoteService(ISingleInstance instance, string channelName)
 		{
-			var app = Application.Current as TApplication;
-			var args = e.Message.Deserialize<string[]>();
-			app.OnInstanceInvoked(args);
+			messageBus = new TinyMessageBus(channelName);
+			messageBus.MessageReceived += (_, e) =>
+			{
+				instance.OnInstanceInvoked(e.Message.Deserialize<string[]>());
+			};
 		}
 
 		private static string[] GetCommandLineArgs(string uniqueApplicationName)
