@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <useWPF>true</useWPF>
     <Authors>soheilkd</Authors>
     <Company />
     <PackageProjectUrl>https://github.com/soheilkd/SingleInstanceCore</PackageProjectUrl>
