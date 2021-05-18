@@ -1,9 +1,14 @@
 # SingleInstanceCore
-Single instance application - For WPF on .NET Core
+For single instance applications on .NET Core
 
 NuGet Package: https://www.nuget.org/packages/SingleInstanceCore/
 # Usage
-The App class (on App.xaml.cs) should inherit ISingleInstance and implement OnInstanceInvoked method:
+
+Note: Usage examples are for WPF desktop applications. For other platforms/frameworks, inheritance and initialization should be done accordingly, not exactly like the examples.
+
+The class that handles instance invokation should inherit ISingleInstance and implement OnInstanceInvoked method.
+
+E.g. in App class (App.xaml.cs):
 ```csharp
 public partial class App : Application, ISingleInstance
 {
@@ -14,14 +19,14 @@ public partial class App : Application, ISingleInstance
 	...
 }
 ```
-The initialization of the instance should be done on application startup or main window's startup
+Initialization of instance should be done when application is starting, and cleanup method should be called on the exit point of the application. 
 
-Cleanup method should be called on the exit point of the application. 
+E.g. in App class (App.xaml.cs):
 ```csharp
 
 	private void Application_Startup(object sender, StartupEventArgs e)
 	{
-		bool isFirstInstance = SingleInstance<App>.InitializeAsFirstInstance("soheilkd_ExampleIPC");
+		bool isFirstInstance = this.InitializeAsFirstInstance("soheilkd_ExampleIPC");
 		if (!isFirstInstance)
 		{
 			//If it's not the first instance, arguments are automatically passed to the first instance
@@ -34,6 +39,6 @@ Cleanup method should be called on the exit point of the application.
 	private void Application_Exit(object sender, ExitEventArgs e)
 	{
 		//Do not forget to cleanup
-		SingleInstance<App>.Cleanup();
+		SingleInstance.Cleanup();
 	}
 ```
