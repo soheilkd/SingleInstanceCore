@@ -7,9 +7,10 @@
     <PackageProjectUrl>https://github.com/soheilkd/SingleInstanceCore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/soheilkd/SingleInstanceCore</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <Description>Library that helps to create single instance WPF application on .NET Core</Description>
-    <PackageTags>wpf single instance core dotnet</PackageTags>
+    <Description>Library that helps to create single instance application on .NET Core</Description>
+    <PackageTags>single instance core dotnet</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
