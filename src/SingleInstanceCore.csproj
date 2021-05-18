@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    <UseWPF>true</UseWPF>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Authors>soheilkd</Authors>
     <Company />
     <PackageProjectUrl>https://github.com/soheilkd/SingleInstanceCore</PackageProjectUrl>
@@ -14,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TinyIpc" Version="2.1.0" />
+    <PackageReference Include="TinyIpc" Version="3.0.0" />
   </ItemGroup>
 
 </Project>
