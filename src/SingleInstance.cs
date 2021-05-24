@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using TinyIpc.Messaging;
 
 namespace SingleInstanceCore
@@ -17,7 +18,7 @@ namespace SingleInstanceCore
 
 		/// <summary>
 		/// Intended to be on app startup
-		/// Initializes service if the call is from first instance
+		/// Initializes service if the call is from first instance.
 		/// Signals the first instance if it already exists
 		/// </summary>
 		/// <param name="uniqueName">A unique name for IPC channel</param>
@@ -41,8 +42,16 @@ namespace SingleInstanceCore
 		{
 			var bus = new TinyMessageBus(channelName);
 			var serializedArgs = commandLineArgs.Serialize();
-			var publishTask = bus.PublishAsync(serializedArgs);
-			publishTask.Wait();
+			bus.PublishAsync(serializedArgs).Wait();
+			WaitTillMessageGetsPublished(bus);
+		}
+
+		private static void WaitTillMessageGetsPublished(TinyMessageBus bus)
+		{
+			while (bus.MessagesPublished != 1)
+			{
+				Thread.Sleep(10);
+			}
 		}
 
 		private static void CreateRemoteService(ISingleInstance instance, string channelName)
