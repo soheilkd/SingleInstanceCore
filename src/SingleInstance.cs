@@ -41,7 +41,8 @@ namespace SingleInstanceCore
 		{
 			var bus = new TinyMessageBus(channelName);
 			var serializedArgs = commandLineArgs.Serialize();
-			bus.PublishAsync(serializedArgs);
+			var publishTask = bus.PublishAsync(serializedArgs);
+			publishTask.Wait();
 		}
 
 		private static void CreateRemoteService(ISingleInstance instance, string channelName)
