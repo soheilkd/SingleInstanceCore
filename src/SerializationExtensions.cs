@@ -1,25 +1,24 @@
-﻿using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System.Text.Json;
 
 namespace SingleInstanceCore
 {
 	//For inline serializing and deserializing
 	internal static class SerializationExtensions
 	{
-		private static readonly BinaryFormatter Formatter = new BinaryFormatter();
+		private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
+		{
+			PropertyNamingPolicy = null,
+			AllowTrailingCommas = true
+		};
 
 		internal static byte[] Serialize<T>(this T obj)
 		{
-			using var memoryStream = new MemoryStream();
-			Formatter.Serialize(memoryStream, obj);
-			return memoryStream.ToArray();
+			return JsonSerializer.SerializeToUtf8Bytes(obj, serializerOptions);
 		}
 
 		internal static T Deserialize<T>(this byte[] data)
 		{
-			using var memoryStream = new MemoryStream(data);
-			var obj = Formatter.Deserialize(memoryStream);
-			return (T)obj;
+			return JsonSerializer.Deserialize<T>(data, serializerOptions);
 		}
 	}
 }
