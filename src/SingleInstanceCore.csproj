@@ -1,5 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <useWPF>true</useWPF>
@@ -11,11 +10,11 @@
     <Description>To create single instance applications on .NET Core/.NET 5</Description>
     <PackageTags>single instance core dotnet</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>2.1.0</Version>
+    <Version>2.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TinyIpc" Version="3.0.0" />
+    <PackageReference Include="TinyIpc" Version="3.0.1" />
   </ItemGroup>
 
 </Project>
