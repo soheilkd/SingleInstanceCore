@@ -39,15 +39,33 @@ namespace SingleInstanceCore
 
 		private static void SignalFirstInstance(string channelName, IList<string> commandLineArgs)
 		{
-			var minMessageAge = TimeSpan.FromSeconds(30);
-			var bus = new TinyMessageBus(channelName, minMessageAge);
+			var bus = GetTinyMessageBus(channelName);
 			var serializedArgs = commandLineArgs.Serialize();
-			bus.PublishAsync(serializedArgs).Wait();
+			bus?.PublishAsync(serializedArgs).Wait();
 			WaitTillMessageGetsPublished(bus);
 		}
 
+		private static TinyMessageBus GetTinyMessageBus(string channelName, int tryCount = 50)
+        {
+			int tries = 0;
+			var minMessageAge = TimeSpan.FromSeconds(30);
+			while (tries++ < tryCount)
+			{
+				try
+				{
+					var bus = new TinyMessageBus(channelName, minMessageAge);
+					return bus;
+				}
+				catch (Exception) { }
+			}
+			return default;
+        }
+
 		private static void WaitTillMessageGetsPublished(TinyMessageBus bus)
 		{
+			if (bus == null)
+				return;
+
 			while (bus.MessagesPublished != 1)
 			{
 				Thread.Sleep(10);
