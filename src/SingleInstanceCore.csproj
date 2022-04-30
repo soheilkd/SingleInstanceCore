@@ -10,7 +10,7 @@
     <Description>To create single instance applications on .NET Core/.NET 5</Description>
     <PackageTags>single instance core dotnet</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>2.2.0</Version>
+    <Version>2.2.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
